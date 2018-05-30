@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+Navn: {{ user.username }}
+<br/>
+Status:
+{% if user.is_staff %}
+staff
+{% else %}
+medlem
+{% endif %}
+<br/>
+<ul>
+    <li>saldo: {{ user.profile.saldo }} </li>
+    <li>poeng: {{user.profile.poeng}}</li>
+</ul>
+
+{% if user.profile.image %}
+<div id='profile_picture'>
+<img src="{{user.profile.image.url}}" class='img-fluid' width=100 height=100 /> 
+</div>
+{% else %}
+<div id='profile_picture'>
+<img src="{% static 'images/profile_default.png'%}" class='img-fluid' width=100 height=100 /> 
+</div>
+{% endif %}
+
+<br />
+<br />
+
+{% if purchases %}
+<h4>Mine kjøp</h4>
+<br />
+
+<table id='history_table' style='width:100%'>
+    <tr>
+        <th>Vare</th>
+        <th>Pris</th>
+        <th>Arrangement</th>
+        <th>Tid</th>
+    </tr>
+    
+    {% for purchase in purchases reversed %}
+    <tr>
+        <td>{{purchase.product}}</td>
+        <td>{{purchase.amount}}</td>
+        <td>{{purchase.event}}</td>
+        <td>None</td>
+    </tr>
+    {% endfor %}
+    
+</table>
+{% endif %}
+
+
+
+
+{% endblock  %}

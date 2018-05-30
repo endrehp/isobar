@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<h3>Opprett nytt arrangement</h3>
+
+<form method='POST' action="{% url 'start_event' %}">
+{% csrf_token %}
+<br/>
+    
+<p>Tittel: <input type=text name=title></p>
+<input class='btn btn-primary' type='submit' value='Start' /> 
+</form>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
+from products.models import Purchase
 
 def signup(request):
     if request.method == 'POST':
@@ -39,3 +40,12 @@ def logout(request):
         return redirect('home')
     #and don't forget to logout 
     return redirect('home')
+
+
+def profile(request):
+    current_user = request.user
+    purchases = Purchase.objects.filter(user=current_user.username)
+    
+    return render(request, 'accounts/profile.html', {'purchases': purchases})
+
+

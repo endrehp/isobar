@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+Product info
+
+<h2>{{ product.title }}</h2>
+<p>{{ product.body }}</p>
+<img class='image-fluid' src='{{ product.image.url }}' height=200 />
+
+{% endblock %}

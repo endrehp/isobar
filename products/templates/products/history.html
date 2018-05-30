@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<h2>History</h2>
+<br />
+{% if purchases %}
+<table id='history_table' style='width:100%'>
+    <tr>
+        <th>Kunde</th>
+        <th>Vare</th>
+        <th>Pris</th>
+        <th>Arrangement</th>
+        <th>Tid</th>
+    </tr>
+    
+    {% for purchase in purchases reversed %}
+    <tr>
+        <td>{{purchase.user}}</td>
+        <td>{{purchase.product}}</td>
+        <td>{{purchase.amount}}</td>
+        <td>{{purchase.event}}</td>
+        <td>None</td>
+    </tr>
+    {% endfor %}
+    
+</table>
+{% endif %}
+
+{% endblock %}

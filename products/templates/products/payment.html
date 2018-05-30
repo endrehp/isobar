@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Kjøp godkjent</h3>
+<p>Customer: {{user.username}}</p>
+<!-- <p>Total price: </p> -->
+<p>Saldo: {{user.profile.saldo}} kr</p>
+<a href="{% url 'event' %}"><button>Ok</button></a>
+{% endblock %}
