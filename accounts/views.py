@@ -44,8 +44,30 @@ def logout(request):
 
 def profile(request):
     current_user = request.user
-    purchases = Purchase.objects.filter(user=current_user.username)
+    purchases = Purchase.objects.filter(user=current_user.username).order_by('-time')
     
     return render(request, 'accounts/profile.html', {'purchases': purchases})
 
 
+def edit_profile(request):
+    if request.method == 'POST':
+        try:
+            current_user = request.user
+            old_name = current_user.username
+            new_name = request.POST['username']
+            if old_name != new_name:
+                current_user.username = new_name
+                purchases = Purchase.objects.filter(user = old_name)
+                for purchase in purchases:
+                    purchase.user = new_name
+                    purchase.save()
+                    
+            if request.FILES['image']:
+                current_user.profile.image = request.FILES['image']
+
+            current_user.save()
+            return redirect('profile')
+        except:
+            return redirect('profile')
+    else:
+        return render(request, 'accounts/edit_profile.html')

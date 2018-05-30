@@ -13,13 +13,13 @@
         <th>Tid</th>
     </tr>
     
-    {% for purchase in purchases reversed %}
+    {% for purchase in purchases %}
     <tr>
         <td>{{purchase.user}}</td>
         <td>{{purchase.product}}</td>
         <td>{{purchase.amount}}</td>
         <td>{{purchase.event}}</td>
-        <td>None</td>
+        <td>{{purchase.time}}</td>
     </tr>
     {% endfor %}
     

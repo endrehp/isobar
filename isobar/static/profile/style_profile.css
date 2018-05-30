@@ -1,0 +1,35 @@
+#block_container
+{
+    position: relative;
+    text-align: center;
+    width: 80%;
+    top: 20px;
+}
+
+#info
+{
+    display:inline-block;
+}
+
+#profile_picture
+{
+    display:inline-block;
+    position: absolute;
+    left: 0px;
+}
+
+#username
+{
+    color: blue;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+#edit_button
+{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 20px;
+    font-size: 10px;
+}

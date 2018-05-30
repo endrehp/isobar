@@ -4,7 +4,12 @@
 
 <script src="{% static 'event/script_event1.js' %}"></script>
 
-Event!
+
+<h3>{{ event.title }}</h3>
+{% if event.active %}
+<a href='{% url "quit_event" %}'><button>Avslutt</button></a>
+{% endif %}
+
 <div id='menu'> 
 {% if beer %}
 <div id=beer_table>

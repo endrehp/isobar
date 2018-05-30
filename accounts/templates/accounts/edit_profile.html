@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+Min profil
+<form method='POST' action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+{% csrf_token %}
+Brukernavn:
+<input type=text name=username value={{user.username}}>
+<br />
+<br />
+<p>Last opp profilbilde</p>
+<input type='file' name='image'>
+<input type="submit" value='Lagre'>
+</form>
+<br />
+<a href='{% url "profile" %}'><button>Avbryt</button></a>
+{% endblock %}

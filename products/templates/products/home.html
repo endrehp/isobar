@@ -7,9 +7,16 @@ Home!
 {% if user.is_staff %}
 Hey staff! 
 <br />
+{% if event.active %}
+<p>Du har et pågående arrangement: {{event.title}}</p>
+<a href='{% url "event" %}'><button>Fortsett</button></a>
+<a href='{% url "quit_event" %}'><button>Avslutt</button></a>
+
+{% else %}
 <a href='{% url "start_event" %}'><button>Start new event</button></a>
 <a href='{% url "event" %}'><button>Enkeltsalg</button></a>
-<a href='{% url "history" %}'><button>History</button></a>
+<a href='{% url "select_history" %}'><button>History</button></a>
+{% endif %}
 {% endif %}
 
 {% endblock %}

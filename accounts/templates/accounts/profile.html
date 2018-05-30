@@ -1,38 +1,46 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block content %}
+
+<script src="{% static 'profile/script_profile.js' %}"></script>
+<style src="{% static 'profile/style_profile.css' %}"></style>
+<link type="text/css" rel="stylesheet" href="{% static 'profile/style_profile.css' %}">
+
 {% csrf_token %}
-Navn: {{ user.username }}
-<br/>
-Status:
+
+<div id='block_container'>
+<div id='info'>
+<p id='username'>{{ user.username }}</p>
+<a href="{% url 'edit_profile' %}"><button id='edit_button'>Instillinger</button></a>
+    <!--<span class="oi" data-glyph="cog"></span> -->
+
+<p>Status:
 {% if user.is_staff %}
 staff
 {% else %}
 medlem
 {% endif %}
-<br/>
-<ul>
-    <li>saldo: {{ user.profile.saldo }} </li>
-    <li>poeng: {{user.profile.poeng}}</li>
-</ul>
+</p>
 
+<p>saldo: {{ user.profile.saldo }} </p>
+<p>poeng: {{user.profile.poeng}}</p>
+</div>
+
+<div id='profile_picture'>
 {% if user.profile.image %}
-<div id='profile_picture'>
-<img src="{{user.profile.image.url}}" class='img-fluid' width=100 height=100 /> 
-</div>
+<img src="{{user.profile.image.url}}" class='img-fluid' width=150/> 
 {% else %}
-<div id='profile_picture'>
 <img src="{% static 'images/profile_default.png'%}" class='img-fluid' width=100 height=100 /> 
-</div>
 {% endif %}
-
+</div>
+</div>
 <br />
 <br />
 
 {% if purchases %}
 <h4>Mine kjøp</h4>
 <br />
-
+<div style='overflow: auto; height:200px'>
 <table id='history_table' style='width:100%'>
     <tr>
         <th>Vare</th>
@@ -41,16 +49,19 @@ medlem
         <th>Tid</th>
     </tr>
     
-    {% for purchase in purchases reversed %}
+    {% for purchase in purchases %}
     <tr>
         <td>{{purchase.product}}</td>
         <td>{{purchase.amount}}</td>
         <td>{{purchase.event}}</td>
-        <td>None</td>
+        <td>{{purchase.time}}</td>
     </tr>
     {% endfor %}
     
 </table>
+</div>
+<br />
+<!-- <button onclick=full_history()>Hele historien</button> -->
 {% endif %}
 
 

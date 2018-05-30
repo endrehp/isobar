@@ -9,5 +9,8 @@ urlpatterns = [
     path('event', views.event, name='event'),
     path('payment', views.payment, name='payment'),
     path('history', views.history, name='history'),
+    path('quit_event', views.quit_event, name='quit_event'),
+    path('select_history', views.select_history, name='select_history'),
+    path('history/<int:event_id>', views.event_history, name='event_history'),
 ]
 
