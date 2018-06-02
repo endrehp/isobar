@@ -42,3 +42,16 @@ function get_total() {
         
     }
  
+function fill_and_pay(e) {
+    var username = e.getElementsByClassName('username')[0].innerText;
+    
+    document.getElementById('username_field').value = username;
+    //document.getElementById('pay_btn').click();
+}
+
+function quit_btn() {
+    var confirmed = confirm('Er du sikker på at du vil avslutte arrangementet?');
+    if (confirmed) {
+        document.getElementById('quit_link').click();
+    }       
+}

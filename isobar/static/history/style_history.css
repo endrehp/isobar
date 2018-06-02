@@ -1,0 +1,23 @@
+#key_data
+{
+    position: relative;
+    top: 20px;
+}
+
+#key_data_table
+{
+    border: solid #ddd;
+    text-align: center;
+    width: 80%;
+    
+}
+
+td, th
+{
+    border: solid #ddd;
+}
+
+th
+{
+    background-color: #ddd;
+}

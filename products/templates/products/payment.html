@@ -2,9 +2,11 @@
 
 {% block content %}
 <h3>Kjøp godkjent</h3>
-<p>Customer: {{user.username}}</p>
+<p>Kunde: {{user.username}}</p>
 <!-- <p>Total price: </p> -->
 <p>Saldo: {{user.profile.saldo}} kr</p>
+<p>Poeng tjent: {{points_gained}} </p>
+<p>Poeng totalt: {{user.profile.poeng}}</p>
 {% if event.active %}
 <a href="{% url 'event' %}"><button>Ok</button></a>
 {% else %}

@@ -20,7 +20,6 @@
     
 <div id='info'>
 <p id='username'>{{ this_user.username }}</p>
-<a href="{% url 'edit_profile' %}"><button id='edit_button'>Instillinger</button></a>
     <!--<span class="oi" data-glyph="cog"></span> -->
 
 <p>Status:
@@ -31,7 +30,6 @@ medlem
 {% endif %}
 </p>
 
-<p>Saldo: {{ this_user.profile.saldo }} kr</p>
 <p>Poeng: {{this_user.profile.poeng}}</p>
 </div>
     
@@ -53,7 +51,7 @@ medlem
     {% include_container chartcontainer 200 400 %}
 <!--<a href="{% url 'my_consumption' %}" ><button>Se mitt forbruk</button></a> -->
 {% else %}
-<p>Du har ikke gjort noen kjøp ennå</p>
+<p>{{this_user.username}} har ikke gjort noen kjøp ennå</p>
     {% endif %}
 </div>    
 

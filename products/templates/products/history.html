@@ -1,9 +1,51 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block content %}
-<h2>History</h2>
+<link type="text/css" rel="stylesheet" href="{% static 'history/style_history.css' %}">
+{% csrf_token %}
+{% if event %}
+<h3>Arrangement: {{ event.title }}</h3>
+{% else %}
+<h3>Alle arrangementer</h3>
+{% endif %}
+
+<div id='key_data'>
+{% if key_data %}
+<table id='key_data_table'>
+    <tr>
+        <th>Antall deltakere</th>
+        <th>Varer solgt</th>
+        <th>Inntekt</th>
+        <th>Kostnad</th>
+        <th>Overskudd</th>
+    </tr>
+    <tr>
+        <td>{{ key_data.n_contenders }}</td>
+        <td>{{ key_data.n_sales }}</td>
+        <td>{{ key_data.revenue }}</td>
+        <td>{{ key_data.cost }}</td>
+        <td>{{ key_data.earnings }}</td>
+    </tr>
+</table>
+{% endif %}
+</div>
+
+<div id='consumption'>
+{% load nvd3_tags %}
+
+    {# Jquery CDN : Needed when using jquery_on_ready=True #}
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    {% include_chart_jscss %}
+    {% load_chart charttype chartdata chartcontainer extra %}
+
+
+    {% include_container chartcontainer 300 600 %}
+</div>    
+
 <br />
+
 {% if purchases %}
+<div style='overflow: auto; height:500px' id='hist_table'>
 <table id='history_table' style='width:100%'>
     <tr>
         <th>Kunde</th>
@@ -25,5 +67,6 @@
     
 </table>
 {% endif %}
+</div>
 
 {% endblock %}

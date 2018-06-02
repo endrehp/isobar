@@ -1,20 +1,36 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block content %}
-Velg Arrangement
+
+
+<style>
+    .date {float: right;}
+    #events {width: 30%; margin: auto;}
+    #events_table {border-collapse: collapse;}
+    #events_table tr:hover {background-color: #ddd;}
+    th {border-bottom: solid 1px;}
+    a, td {color: gray}
+</style>
+
+<br />
 {% if events %}
-<div id=events_table>
-<table style='width:50%'>
+<div id=events>
+<table style='width:100%' id='events_table'>
     <th>Arrangementer</th>
     {% for event in events %}
     <tr> 
         <td><a href="{% url 'event_history' event.id %}">{{ event.title }}</a></td>
-        <td>{{ event.start_date }} kr</td>
+        <td class='date'>{{ event.start_date.date }}</td>
     </tr>
     {% endfor %}
 </table>
+<br />
+<a href='{% url "history" %}'>Alle arrangementer</a>
 </div>
 {% endif %}
-<a href='{% url "history" %}'>Alle arrangementer</a>
+
+
+
+
 
 {% endblock %}

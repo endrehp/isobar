@@ -1,0 +1,40 @@
+td,a {
+    color: grey;
+}
+
+th {
+    border-bottom: solid 1px;
+    padding-top: 10px;
+}
+
+
+button {
+    border-radius: 50%;
+    color: grey;
+}
+
+button:hover {
+    background-color: skyblue; /* Green */
+    color: white;
+}
+
+#block {
+    position: relative;
+    text-align: left;
+    width: 100%;
+    top: 20px;
+}
+
+#menu {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+    padding-right: 50px;
+    
+}
+
+#customer_container {
+    width: 40%;
+    display: inline-block;
+    vertical-align: top;
+}

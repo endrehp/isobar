@@ -1,0 +1,73 @@
+.block_container
+{
+    position: relative;
+    text-align: center;
+    width: 80%;
+    padding: 20px;
+}
+
+#info
+{
+    display:inline-block;
+    text-align: left;
+    vertical-align: middle;
+    padding-left: 100px;
+}
+
+#profile_picture
+{
+    display:inline-block;
+    vertical-align: top;
+}
+
+
+#consumption
+{
+    display:inline-block;
+    vertical-align: top;
+    
+}
+
+#favourites
+{
+    vertical-align: top;
+    display:inline-block;
+    text-align: left;
+    padding: 20px;
+}
+
+#username
+{
+    color: blue;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+#edit_button
+{
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    height: 20px;
+    font-size: 10px;
+}
+
+td,a,p {
+    color: grey;
+}
+
+th {
+    border-bottom: solid 1px;
+    padding-top: 10px;
+}
+
+
+button {
+    border-radius: 1px;
+    color: grey;
+}
+
+#hist_table {
+    width: 60%;
+    margin: auto;
+}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% csrf_token %}
+<h3>Mitt forbruk</h3>
+<br/>
+{% load nvd3_tags %}
+<head>
+    {# Jquery CDN : Needed when using jquery_on_ready=True #}
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    {% include_chart_jscss %}
+    {% load_chart charttype chartdata chartcontainer extra %}
+</head>
+<body>
+    {% include_container chartcontainer 400 800 %}
+    {{ text }}
+</body>
+
+{% endblock %}

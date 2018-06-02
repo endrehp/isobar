@@ -2,34 +2,25 @@
 {
     position: relative;
     text-align: center;
-    width: 80%;
+    width: 100%;
     top: 20px;
 }
 
-#info
+#members_table
 {
     display:inline-block;
+    text-align: left;
 }
 
-#profile_picture
+#events_table
 {
     display:inline-block;
     position: absolute;
     left: 0px;
+    text-align: left;
 }
 
-#username
+.date
 {
-    color: blue;
-    font-weight: 600;
-    font-size: 20px;
-}
-
-#edit_button
-{
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    height: 20px;
     font-size: 10px;
 }

@@ -1,68 +1,60 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 {% block content %}
+<link type="text/css" rel="stylesheet" href="{% static 'event/style_event1.css' %}">
 
-Meny!
+<div id=menu_table style="width:60%; margin: auto">
+<br />
+<h3>Meny</h3>
+<table style="width:100%">
 {% if beer %}
-<div id=beer_table>
-<table style='width:50%'>
-    <th>Øl</th>
+    <th colspan="2">Øl</th>
     {% for i in beer %}
     <tr> 
         <td><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td>{{ i.price }} kr</td>
     </tr>
     {% endfor %}
-</table>
-</div>
 {% endif %}
 
-<br/>
+
 
 {% if drinks %}
-<div id=drink_table>
-<table style='width:50%'>
-    <th>Drinker</th>
+    <th colspan="2">Drinker</th>
     {% for i in drinks %}
     <tr> 
         <td><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td>{{ i.price }} kr</td>
     </tr>
     {% endfor %}
-</table>
-</div>
 {% endif %}
 
-<br/>
 
 {% if shots %}
-<div id=shot_table>
-<table style='width:50%'>
-    <th>Shots</th>
+
+    <th colspan="2">Shots</th>
     {% for i in shots %}
     <tr> 
         <td><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td>{{ i.price }} kr</td>
     </tr>
     {% endfor %}
-</table>
-</div>
+
 {% endif %}
 
-<br/>
+
 
 {% if other %}
-<div id=other_table>
-<table style='width:50%'>
-    <th>Annet</th>
+    <th colspan="2">Annet</th>
     {% for i in other %}
     <tr> 
         <td><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td>{{ i.price }} kr</td>
     </tr>
     {% endfor %}
+
+{% endif %}
 </table>
 </div>
-{% endif %}
 
 {% endblock %}

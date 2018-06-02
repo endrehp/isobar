@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<style>
+    img {width: 40px; height: 40px;}
+    #members {width: 60%; margin: auto;}
+    #members_table {border-collapse: collapse;}
+    #members_table tr:hover {background-color: #ddd;}
+    th {border-bottom: solid 1px;}
+    td {color: gray;}
+    input {width: 50px;}
+    .btn {width: 100px; float:right;}
+    #input_col {width: 200px;}
+</style>
+<br />
+{% if members %}
+<div id=members>
+<form method='POST' action="{% url 'balances' %}">
+{% csrf_token %}
+<table style='width:100%' id='members_table'>
+    <th>Navn</th>
+    <th>Saldo</th>
+    <th>Overføring</th>
+    {% for member in members %}
+    <tr> 
+        <td><input type='text' name='username' value="{{member.username}}" hidden>{{ member.username }}</td>
+        <td>{{member.profile.saldo}}</td>
+        <td id='input_col'><input type='number' name='amount' id='amount_field' /></td>
+        {% if confirmations %}
+        <td><span class="oi oi-circle-check"></span></td>
+        {% endif %}
+        <!--
+        <td style="float: right;"><div id='profile_picture'>
+<a href="{% url 'member_profile' member.id %}">
+{% if member.profile.image %}
+<img src="{{member.profile.image.url}}" class='img-fluid' width=150/> 
+{% else %}
+<img src="{% static 'images/profile_default.png'%}" class='img-fluid' width=100 height=100 /> 
+{% endif %}
+</a></div></td>
+-->
+    </tr>
+    {% endfor %}
+</table>
+<input class='btn btn-primary' type='submit' value='Utfør' id='confirm_btn' /> 
+</form>
+</div>
+{% endif %}
+
+{% endblock %}

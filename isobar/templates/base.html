@@ -10,7 +10,7 @@
     <meta name="author" content="">
     
 
-    <title>Endre Hauge Paulsen</title>
+    <title>Isobar</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -36,7 +36,12 @@
         <a class="nav-item nav-link" href="{% url 'home' %}">Hjem</a>
         <a class="nav-item nav-link" href="">Arrangementer</a>
         <a class="nav-item nav-link" href="{% url 'menu' %}">Meny</a>
-        <a class="nav-item nav-link" href="{% url 'profile' %}">Min Profil</a>
+        <a class="nav-item nav-link" href="{% url 'my_profile' %}">Min Profil</a>
+        <a class="nav-item nav-link" href="{% url 'members' %}">Medlemmer</a>
+        {% if user.is_staff %}
+        <a class="nav-item nav-link" href='{% url "select_history" %}'>Statistikk</a>
+        <a class="nav-item nav-link" href='{% url "balances" %}'>Saldo</a>
+        {% endif %}
       <a class="nav-item nav-link" href="javascript: {document.getElementById('logout').submit()}">Logout</a> 
         <form id='logout' method='POST' action='{% url "logout" %}'>
         {% csrf_token %}

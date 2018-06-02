@@ -12,6 +12,13 @@ class Profile(models.Model):
     
     def add_money(self, amount):
         self.saldo += amount
+    
+    def add_points(self, n_products):
+        poeng = 0
+        for i in range(n_products):
+            poeng += 10 + 5*i
+        self.poeng += poeng
+        return poeng
         
     def __str__(self):
         return self.user.username

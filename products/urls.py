@@ -12,5 +12,6 @@ urlpatterns = [
     path('quit_event', views.quit_event, name='quit_event'),
     path('select_history', views.select_history, name='select_history'),
     path('history/<int:event_id>', views.event_history, name='event_history'),
+    path('history/member/<int:member_id>', views.member_history, name='member_history'),
 ]
 
