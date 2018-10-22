@@ -8,11 +8,16 @@
 <h3>Meny</h3>
 <table style="width:100%">
 {% if beer %}
-    <th colspan="2">Øl</th>
+    <th colspan="3">Øl</th>
     {% for i in beer %}
     <tr> 
         <td><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td>{{ i.price }} kr</td>
+        {% if i.avg_rating > 0.9  %}
+        <td>{{i.avg_rating|floatformat:1 }} <span class="oi oi-star"></span></td>
+        {% endif %}
+        <!--<td><img src="{{i.image.url}}" class='img-fluid' style='height: 50px;'/></td>-->
+        
     </tr>
     {% endfor %}
 {% endif %}
@@ -20,11 +25,15 @@
 
 
 {% if drinks %}
-    <th colspan="2">Drinker</th>
+    <th colspan="3">Drinker</th>
     {% for i in drinks %}
     <tr> 
         <td><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td>{{ i.price }} kr</td>
+        {% if i.avg_rating > 0.9  %}
+        <td>{{i.avg_rating|floatformat:1 }} <span class="oi oi-star"></span></td>
+        {% endif %}
+        
     </tr>
     {% endfor %}
 {% endif %}
@@ -32,11 +41,15 @@
 
 {% if shots %}
 
-    <th colspan="2">Shots</th>
+    <th colspan="3">Shots</th>
     {% for i in shots %}
     <tr> 
         <td><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td>{{ i.price }} kr</td>
+        {% if i.avg_rating > 0.9  %}
+        <td>{{i.avg_rating|floatformat:1 }} <span class="oi oi-star"></span></td>
+        {% endif %}
+        
     </tr>
     {% endfor %}
 
@@ -45,11 +58,15 @@
 
 
 {% if other %}
-    <th colspan="2">Annet</th>
+    <th colspan="3">Annet</th>
     {% for i in other %}
     <tr> 
         <td><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td>{{ i.price }} kr</td>
+        {% if i.avg_rating > 0.9  %}
+        <td>{{i.avg_rating|floatformat:1 }} <span class="oi oi-star"></span></td>
+        {% endif %}
+        
     </tr>
     {% endfor %}
 

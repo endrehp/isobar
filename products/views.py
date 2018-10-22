@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
-from .models import Product, Purchase, Event, Comment
+from .models import Category, Product, Purchase, Event, Comment, Rating
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 import pandas as pd
@@ -18,12 +19,14 @@ def home(request):
             return render(request, 'products/home.html', {'event': event})
     except:
         return render(request, 'products/home.html')
+
+@login_required
 def menu(request):
-    products = Product.objects
-    beer = products.filter(category='beer')
-    drinks = products.filter(category='drink')
-    shots = products.filter(category='shot')
-    other = products.filter(category='other')
+    categories = Category.objects
+    beer = categories.get(category='Beer').product_set.all()
+    drinks = categories.get(category='Drink').product_set.all()
+    shots = categories.get(category='Shot').product_set.all()
+    other = categories.get(category='Other').product_set.all()
     #print(beer[1].title)
     return render(request, 'products/menu.html', {'beer':beer, 'drinks': drinks, 'shots': shots, 'other': other})
 
@@ -31,28 +34,41 @@ def menu(request):
 def create_product(request):
     return render(request, 'products/create_product.html')
 
+@login_required
 def product_info(request, product_id):
     
     product = get_object_or_404(Product, pk=product_id)
+    current_user = request.user
+    sales = Purchase.objects.filter(product=product.title)
+    n_sales = len(sales)
+    n_sales_me = len(sales.filter(user=current_user.username))
+    
+    rated = len(product.rating_set.filter(author=current_user.username))
+    print(rated)
     
     if request.method =='POST':
         
         try:
-            current_user = request.user
-            comment = request.POST['comment']
-            product.comment_set.create(author=current_user.username, text=comment)
-            product.save()
-            
+            if request.POST['comment']:
+                comment = request.POST['comment']
+                product.comment_set.create(author=current_user.username, text=comment)
+                product.save()
+            elif request.POST['rating']:
+                rating = int(request.POST['rating'])
+                product.rating_set.create(author=current_user.username, rating=rating)
+                product.add_rating(rating)
+                product.save()
+                rated = 1
         except:
             pass
         
         
-        return render(request, 'products/product_info.html', {'product': product, 'pk': product_id})
+        return render(request, 'products/product_info.html', {'product': product, 'pk': product_id, 'rated': rated, 'n_sales':n_sales, 'n_sales_me': n_sales_me})
 
     else:
 
 
-        return render(request, 'products/product_info.html', {'product': product, 'pk': product_id})
+        return render(request, 'products/product_info.html', {'product': product, 'pk': product_id, 'rated': rated, 'n_sales':n_sales, 'n_sales_me': n_sales_me})
 
 @staff_member_required
 def start_event(request):
@@ -61,12 +77,12 @@ def start_event(request):
         event = Event(title=request.POST['title'], active=True)
         event.save()
         
-        products = Product.objects
-        beer = products.filter(category='beer')
-        drinks = products.filter(category='drink')
-        shots = products.filter(category='shot')
-        other = products.filter(category='other')
-        #print(beer[1].title)
+        categories = Category.objects
+        beer = categories.get(category='Beer').product_set.all()
+        drinks = categories.get(category='Drink').product_set.all()
+        shots = categories.get(category='Shot').product_set.all()
+        other = categories.get(category='Other').product_set.all()
+        
         return render(request, 'products/event.html', {'event': event, 'beer':beer, 'drinks': drinks, 'shots': shots, 'other': other})
         
     else:
@@ -118,6 +134,8 @@ def event(request):
             try:
                 user = User.objects.get(username=request.POST['username'])
                 products = request.POST.getlist('title')
+                product_ids = request.POST.getlist('id')
+                print(product_ids)
                 prices = request.POST.getlist('price')
                 total = sum(list(map(int, prices)))
                 
@@ -129,31 +147,31 @@ def event(request):
                 
                 #register purchases
                 for i in range(len(products)):
-                    purchase = Purchase(user=user.username, product=products[i], amount=int(prices[i]), event=event.title)
+                    purchase = Purchase(user=user.username, product=products[i], product_id=int(product_ids[i]), amount=int(prices[i]), event=event.title)
                     purchase.save()
                 
                 return render(request, 'products/payment.html', {'user': user, 'event':event, 'points_gained': points_gained})
             except:
                 print('exception')
-                products = Product.objects
-                beer = products.filter(category='beer')
-                drinks = products.filter(category='drink')
-                shots = products.filter(category='shot')
-                other = products.filter(category='other')
+                categories = Category.objects
+                beer = categories.get(category='Beer').product_set.all()
+                drinks = categories.get(category='Drink').product_set.all()
+                shots = categories.get(category='Shot').product_set.all()
+                other = categories.get(category='Other').product_set.all()
                 #print(beer[1].title)
                 return render(request, 'products/event.html', {'event':event, 'beer':beer, 'drinks': drinks, 'shots': shots, 'other': other, 'error': 'noe gikk galt', 'customers': customers})
 
     else:
-        products = Product.objects
-        beer = products.filter(category='beer')
-        drinks = products.filter(category='drink')
-        shots = products.filter(category='shot')
-        other = products.filter(category='other')
+        categories = Category.objects
+        beer = categories.get(category='Beer').product_set.all()
+        drinks = categories.get(category='Drink').product_set.all()
+        shots = categories.get(category='Shot').product_set.all()
+        other = categories.get(category='Other').product_set.all()
         
         #print(beer[1].title)
         return render(request, 'products/event.html', {'event':event, 'beer':beer, 'drinks': drinks, 'shots': shots, 'other': other, 'customers': customers})
 
-    
+@staff_member_required    
 def payment(request):
     return render(request, 'products/payment.html')
 
@@ -166,6 +184,7 @@ def select_history(request):
     
     return render(request, 'products/select_history.html', {'events': events.order_by('-start_date'), 'members': members})
 
+@staff_member_required
 def event_history(request, event_id):
     
     event = get_object_or_404(Event, pk=event_id)
@@ -183,6 +202,7 @@ def event_history(request, event_id):
         key_data = {'n_contenders':n_contenders, 'n_sales': n_sales, 'revenue': revenue, 'cost': cost, 'earnings': earnings}
         
         products = list(df['product'])
+        product_ids = list(df['product_id'])
         unique_products = list(set(products))
 
         counts = []
@@ -193,27 +213,41 @@ def event_history(request, event_id):
                 if product == unique:
                     counts[i] += 1
             i += 1
-
-        fav_df = pd.DataFrame()
-        fav_df['product'] = unique_products
-        fav_df['count'] = counts
-        fav_df.sort_values(by=['count'],ascending=False, inplace=True)
-        #fav_df.reset_index(inplace=True, drop=True)
-        fav_list = list(fav_df['product'])
-
-        if len(fav_list)>5:
-            fav_list = fav_list[0:5]
-
-
+            
+        categories = list(Category.objects.all())
+        categories = [str(i) for i in categories]
+        cat_dict = dict.fromkeys(categories, 0)
+        
+        for product_id in product_ids:
+            product_object = Product.objects.get(id=product_id)
+            cat_dict[product_object.category.category] += 1
+        
+        ######Charts#######
+        
+        #Barchart
         xdata = unique_products
         ydata = counts
-
+        
         extra_serie1 = {"tooltip": {"y_start": "", "y_end": " cal"}}
         chartdata = {
             'x': xdata, 'name1': '', 'y1': ydata, 'extra1': extra_serie1,
         }
         charttype = "discreteBarChart"
         chartcontainer = 'discretebarchart_container'  # container name
+        
+        
+        #Piechart
+        xdata2 = list(cat_dict.keys())
+        ydata2 = list(cat_dict.values())
+        
+        color_list = ['#5d8aa8', '#e32636', '#efdecd', '#ffbf00', '#ff033e', '#a4c639',
+                  '#b2beb5', '#8db600', '#7fffd4', '#ff007f', '#ff55a3', '#5f9ea0']
+        
+        extra_serie2 = { "tooltip": {"y_start": "", "y_end": ""}, "color_list": color_list}
+        chartdata2 = {'x': xdata2, 'y1': ydata2, 'extra1': extra_serie2}
+        charttype2 = "pieChart"
+        chartcontainer2 = 'piechart_container'  # container name        
+        
         data = {
             'charttype': charttype,
             'chartdata': chartdata,
@@ -227,6 +261,15 @@ def event_history(request, event_id):
                 'tag_script_js': True,
                 'jquery_on_ready': True,
             },
+            'charttype2': charttype2,
+            'chartdata2': chartdata2,
+            'chartcontainer2': chartcontainer2,
+            'extra2': {
+            'x_is_date': False,
+            'x_axis_format': '',
+            'tag_script_js': True,
+            'jquery_on_ready': False,
+            }
         }
 
         return render(request, 'products/history.html', data)
@@ -236,7 +279,7 @@ def event_history(request, event_id):
         return render(request, 'products/history.html', data)
 
     
-
+@staff_member_required
 def member_history(request, member_id):
     
     member = get_object_or_404(User, pk=member_id)
@@ -259,8 +302,9 @@ def history(request):
         cost = 0 #TODO
         earnings = revenue - cost 
         key_data = {'n_contenders':n_contenders, 'n_sales': n_sales, 'revenue': revenue, 'cost': cost, 'earnings': earnings}
-
+        
         products = list(df['product'])
+        product_ids = list(df['product_id'])
         unique_products = list(set(products))
 
         counts = []
@@ -271,31 +315,46 @@ def history(request):
                 if product == unique:
                     counts[i] += 1
             i += 1
-
-        fav_df = pd.DataFrame()
-        fav_df['product'] = unique_products
-        fav_df['count'] = counts
-        fav_df.sort_values(by=['count'],ascending=False, inplace=True)
-        #fav_df.reset_index(inplace=True, drop=True)
-        fav_list = list(fav_df['product'])
-
-        if len(fav_list)>5:
-            fav_list = fav_list[0:5]
-
-
+            
+        categories = list(Category.objects.all())
+        categories = [str(i) for i in categories]
+        cat_dict = dict.fromkeys(categories, 0)
+        
+        for product_id in product_ids:
+            product_object = Product.objects.get(id=product_id)
+            cat_dict[product_object.category.category] += 1
+        
+        ######Charts#######
+        
+        #Barchart
         xdata = unique_products
         ydata = counts
-
+        
         extra_serie1 = {"tooltip": {"y_start": "", "y_end": " cal"}}
         chartdata = {
             'x': xdata, 'name1': '', 'y1': ydata, 'extra1': extra_serie1,
         }
         charttype = "discreteBarChart"
         chartcontainer = 'discretebarchart_container'  # container name
+        
+        
+        #Piechart
+        xdata2 = list(cat_dict.keys())
+        ydata2 = list(cat_dict.values())
+        
+        color_list = ['#5d8aa8', '#e32636', '#efdecd', '#ffbf00', '#ff033e', '#a4c639',
+                  '#b2beb5', '#8db600', '#7fffd4', '#ff007f', '#ff55a3', '#5f9ea0']
+        
+        extra_serie2 = { "tooltip": {"y_start": "", "y_end": ""}, "color_list": color_list}
+        chartdata2 = {'x': xdata2, 'y1': ydata2, 'extra1': extra_serie2}
+        charttype2 = "pieChart"
+        chartcontainer2 = 'piechart_container'  # container name        
+        
         data = {
             'charttype': charttype,
             'chartdata': chartdata,
             'chartcontainer': chartcontainer,
+            'event': event,
             'purchases': purchases,
             'key_data': key_data,
             'extra': {
@@ -304,6 +363,15 @@ def history(request):
                 'tag_script_js': True,
                 'jquery_on_ready': True,
             },
+            'charttype2': charttype2,
+            'chartdata2': chartdata2,
+            'chartcontainer2': chartcontainer2,
+            'extra2': {
+            'x_is_date': False,
+            'x_axis_format': '',
+            'tag_script_js': True,
+            'jquery_on_ready': False,
+            }
         }
 
         return render(request, 'products/history.html', data)

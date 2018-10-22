@@ -8,7 +8,7 @@
     color: grey;}
 
     button:hover {
-    background-color: gray; /* Green */
+    background-color: gray;
     color: white; }
 </style>
 
@@ -24,7 +24,7 @@
 <a href='{% url "quit_event" %}'><button>Avslutt</button></a>
 
 {% else %}
-<a href='{% url "start_event" %}'><button>Start new event</button></a>
+<a href='{% url "start_event" %}'><button>Nytt arrangement</button></a>
 <a href='{% url "event" %}'><button>Enkeltsalg</button></a>
 {% endif %}
 {% endif %}
@@ -34,7 +34,7 @@
 {% if user.is_authenticated %}
 <p>Hei {{user.username}}! Betaling skjer via vipps. Har du spørsmål, send henvendelse til endre.hauge.paulsen@lyse.net</p>
 {% else %}
-<p>For å være med på moroa må du lage deg en bruker. Dette gjør du ved å klikke på "Sign up" øverst i høyre hjørne.</p>
+<p>For å være med på morroa må du lage deg en bruker. Dette gjør du ved å klikke på "Sign up" øverst i høyre hjørne.</p>
 {% endif %}
 </div>
 

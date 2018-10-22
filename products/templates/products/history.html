@@ -2,6 +2,9 @@
 {% load staticfiles %}
 {% block content %}
 <link type="text/css" rel="stylesheet" href="{% static 'history/style_history.css' %}">
+<style>
+    .chart {padding: 40px;}
+</style>
 {% csrf_token %}
 {% if event %}
 <h3>Arrangement: {{ event.title }}</h3>
@@ -36,10 +39,16 @@
     {# Jquery CDN : Needed when using jquery_on_ready=True #}
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     {% include_chart_jscss %}
+    
+    <div class='chart' id='barchart'>
     {% load_chart charttype chartdata chartcontainer extra %}
-
-
     {% include_container chartcontainer 300 600 %}
+    </div>
+    
+    <div class='chart' id='piechart'>
+    {% load_chart charttype2 chartdata2 chartcontainer2 extra2 %}
+    {% include_container chartcontainer2 300 600 %}
+    </div>
 </div>    
 
 <br />

@@ -3,11 +3,14 @@ function add_order(e) {
     var row = order_table.insertRow(1);
     var title_col = row.insertCell(0);
     var price_col = row.insertCell(1);
-    var delete_col = row.insertCell(2);
+    var id_col = row.insertCell(2);
+    var delete_col = row.insertCell(3);
     var title = e.getElementsByClassName('title')[0].innerText;
     var price = e.getElementsByClassName('price')[0].innerText;
+    var id = e.getElementsByClassName('id')[0].innerText;
     title_col.innerHTML = "<input type='text' name='title' value="+ title +" hidden>"+title;
     price_col.innerHTML = "<input type='text' name='price' value="+ price + " hidden>"+price;
+    id_col.innerHTML = "<input type='number' name='id' value="+ id + " hidden>";
     delete_col.innerHTML = '<button onclick=delete_item(this)><span class="oi oi-trash"></span></button>';
     get_total();
     

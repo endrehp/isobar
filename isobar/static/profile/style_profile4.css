@@ -21,21 +21,6 @@
 }
 
 
-#consumption
-{
-    display:inline-block;
-    vertical-align: top;
-    
-}
-
-#favourites
-{
-    vertical-align: top;
-    display:inline-block;
-    text-align: left;
-    padding: 20px;
-}
-
 #username
 {
     color: blue;

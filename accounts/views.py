@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.contrib.auth.models import User
 from django.contrib import auth
-from products.models import Purchase
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils import timezone
+from products.models import Purchase, Category, Product
 
 #import numpy as np
 import pandas as pd
@@ -40,6 +43,7 @@ def login(request):
             
     return render(request, 'accounts/login.html')
 
+
 def logout(request):
     if request.method == 'POST':
         auth.logout(request)
@@ -47,16 +51,16 @@ def logout(request):
     #and don't forget to logout 
     return redirect('home')
 
-
+@login_required
 def my_profile(request):
     this_user = request.user
     purchases = Purchase.objects.filter(user=this_user.username).order_by('-time')
-    
+
     try:
-
         df = pd.DataFrame(list(purchases.values()))
-
+        
         products = list(df['product'])
+        product_ids = list(df['product_id'])
         unique_products = list(set(products))
 
         counts = []
@@ -67,7 +71,28 @@ def my_profile(request):
                 if product == unique:
                     counts[i] += 1
             i += 1
-
+        '''
+        n_products = len(Product.objects.all())
+        n_unique = len(unique_products)
+        unique_short = []
+        max_length = n_products-n_unique+2
+        for unique in unique_products:
+            if len(unique) >= max_length:
+                unique_short.append(unique[0:max_length])
+            else:
+                unique_short.append(unique)
+        '''
+        
+        
+        categories = list(Category.objects.all())
+        categories = [str(i) for i in categories]
+        cat_dict = dict.fromkeys(categories, 0)
+        
+        for product_id in product_ids:
+            product_object = Product.objects.get(id=product_id)
+            cat_dict[product_object.category.category] += 1
+        
+    
         fav_df = pd.DataFrame()
         fav_df['product'] = unique_products
         fav_df['count'] = counts
@@ -77,17 +102,37 @@ def my_profile(request):
 
         if len(fav_list)>5:
             fav_list = fav_list[0:5]
-
-
+            
+        try:
+            drunkness = this_user.profile.get_drunkness(purchases)
+        except:
+            drunkness = 0
+        ######Charts#######
+        
+        #Barchart
         xdata = unique_products
         ydata = counts
-
+        
         extra_serie1 = {"tooltip": {"y_start": "", "y_end": " cal"}}
         chartdata = {
             'x': xdata, 'name1': '', 'y1': ydata, 'extra1': extra_serie1,
         }
         charttype = "discreteBarChart"
         chartcontainer = 'discretebarchart_container'  # container name
+        
+        
+        #Piechart
+        xdata2 = list(cat_dict.keys())
+        ydata2 = list(cat_dict.values())
+        
+        color_list = ['#5d8aa8', '#e32636', '#efdecd', '#ffbf00', '#ff033e', '#a4c639',
+                  '#b2beb5', '#8db600', '#7fffd4', '#ff007f', '#ff55a3', '#5f9ea0']
+        
+        extra_serie2 = { "tooltip": {"y_start": "", "y_end": ""}, "color_list": color_list}
+        chartdata2 = {'x': xdata2, 'y1': ydata2, 'extra1': extra_serie2}
+        charttype2 = "pieChart"
+        chartcontainer2 = 'piechart_container'  # container name        
+        
         data = {
             'charttype': charttype,
             'chartdata': chartdata,
@@ -95,14 +140,25 @@ def my_profile(request):
             'this_user': this_user,
             'purchases': purchases,
             'favourites': fav_list,
-            'text': 'heihei',
+            'drunkness': drunkness,
+            'my_profile': True,
             'extra': {
                 'x_is_date': False,
                 'x_axis_format': '',
                 'tag_script_js': True,
                 'jquery_on_ready': True,
             },
+            'charttype2': charttype2,
+            'chartdata2': chartdata2,
+            'chartcontainer2': chartcontainer2,
+            'extra2': {
+            'x_is_date': False,
+            'x_axis_format': '',
+            'tag_script_js': True,
+            'jquery_on_ready': False,
+            }
         }
+        
 
         return render(request, 'accounts/profile.html', data)
     
@@ -110,7 +166,7 @@ def my_profile(request):
         data={'this_user': this_user}
         return render(request, 'accounts/profile.html', data)
 
-
+@login_required
 def edit_profile(request):
     if request.method == 'POST':
         try:
@@ -136,24 +192,29 @@ def edit_profile(request):
     else:
         return render(request, 'accounts/edit_profile.html')
     
-    
+@login_required
 def members(request):
     
     members = User.objects.all()
     
     return render(request, 'accounts/members.html', {'members': members})
     
-    
+@login_required  
 def member_profile(request, member_id):
     
     this_user = get_object_or_404(User, pk=member_id)
     purchases = Purchase.objects.filter(user=this_user.username).order_by('-time')
+    if this_user == request.user:
+        my_profile = True
+        print('my profile')
+    else:
+        my_profile = False
     
     try:
-
         df = pd.DataFrame(list(purchases.values()))
-
+        
         products = list(df['product'])
+        product_ids = list(df['product_id'])
         unique_products = list(set(products))
 
         counts = []
@@ -164,7 +225,28 @@ def member_profile(request, member_id):
                 if product == unique:
                     counts[i] += 1
             i += 1
-
+        '''
+        n_products = len(Product.objects.all())
+        n_unique = len(unique_products)
+        unique_short = []
+        max_length = n_products-n_unique+2
+        for unique in unique_products:
+            if len(unique) >= max_length:
+                unique_short.append(unique[0:max_length])
+            else:
+                unique_short.append(unique)
+        '''
+        
+        
+        categories = list(Category.objects.all())
+        categories = [str(i) for i in categories]
+        cat_dict = dict.fromkeys(categories, 0)
+        
+        for product_id in product_ids:
+            product_object = Product.objects.get(id=product_id)
+            cat_dict[product_object.category.category] += 1
+        
+    
         fav_df = pd.DataFrame()
         fav_df['product'] = unique_products
         fav_df['count'] = counts
@@ -174,17 +256,38 @@ def member_profile(request, member_id):
 
         if len(fav_list)>5:
             fav_list = fav_list[0:5]
-
-
+            
+        try:
+            drunkness = this_user.profile.get_drunkness(purchases)
+        except:
+            drunkness = 0
+        
+        ######Charts#######
+        
+        #Barchart
         xdata = unique_products
         ydata = counts
-
+        
         extra_serie1 = {"tooltip": {"y_start": "", "y_end": " cal"}}
         chartdata = {
             'x': xdata, 'name1': '', 'y1': ydata, 'extra1': extra_serie1,
         }
         charttype = "discreteBarChart"
         chartcontainer = 'discretebarchart_container'  # container name
+        
+        
+        #Piechart
+        xdata2 = list(cat_dict.keys())
+        ydata2 = list(cat_dict.values())
+        
+        color_list = ['#5d8aa8', '#e32636', '#efdecd', '#ffbf00', '#ff033e', '#a4c639',
+                  '#b2beb5', '#8db600', '#7fffd4', '#ff007f', '#ff55a3', '#5f9ea0']
+        
+        extra_serie2 = { "tooltip": {"y_start": "", "y_end": ""}, "color_list": color_list}
+        chartdata2 = {'x': xdata2, 'y1': ydata2, 'extra1': extra_serie2}
+        charttype2 = "pieChart"
+        chartcontainer2 = 'piechart_container'  # container name        
+        
         data = {
             'charttype': charttype,
             'chartdata': chartdata,
@@ -192,26 +295,37 @@ def member_profile(request, member_id):
             'this_user': this_user,
             'purchases': purchases,
             'favourites': fav_list,
-            'text': 'heihei',
+            'drunkness': drunkness,
+            'my_profile': my_profile,
             'extra': {
                 'x_is_date': False,
                 'x_axis_format': '',
                 'tag_script_js': True,
                 'jquery_on_ready': True,
             },
+            'charttype2': charttype2,
+            'chartdata2': chartdata2,
+            'chartcontainer2': chartcontainer2,
+            'extra2': {
+            'x_is_date': False,
+            'x_axis_format': '',
+            'tag_script_js': True,
+            'jquery_on_ready': False,
+            }
         }
+        
 
-        return render(request, 'accounts/member_profile.html', data)
+        return render(request, 'accounts/profile.html', data)
     
     except:
         data={'this_user': this_user}
-        return render(request, 'accounts/member_profile.html', data)
+        return render(request, 'accounts/profile.html', data)
 
     
     
     
     
-    
+@login_required    
 def my_consumption(request):
     """
     discretebarchart page
@@ -261,7 +375,7 @@ def my_consumption(request):
     
     
     
-    
+@staff_member_required
 def balances(request):
     
     if request.method == 'POST':

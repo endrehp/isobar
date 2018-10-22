@@ -4,6 +4,11 @@
 
 <script src="{% static 'profile/script_profile.js' %}"></script>
 <link type="text/css" rel="stylesheet" href="{% static 'profile/style_profile4.css' %}">
+<style>
+    #consumption {margin: auto}
+    #barchart { display:inline-block; vertical-align: top; }
+    #piechart { vertical-align: top; display:inline-block;}
+</style>
 
 {% csrf_token %}
 
@@ -20,9 +25,17 @@
     
 <div id='info'>
 <p id='username'>{{ this_user.username }}</p>
-<a href="{% url 'edit_profile' %}"><button id='edit_button'>Instillinger</button></a>
-    <!--<span class="oi" data-glyph="cog"></span> -->
 
+{% if drunkness > 0 %}
+<p id='promille'>Beregnet promille: {{drunkness|floatformat:1 }}</p>
+{% endif %}
+
+{{ my_profile }}
+{% if my_profile %}
+<a href="{% url 'edit_profile' %}"><button id='edit_button'>Instillinger</button></a>
+<p>Saldo: {{ this_user.profile.saldo }} kr</p>
+{% endif %}
+    
 <p>Status:
 {% if this_user.is_staff %}
 staff
@@ -31,7 +44,6 @@ medlem
 {% endif %}
 </p>
 
-<p>Saldo: {{ this_user.profile.saldo }} kr</p>
 <p>Poeng: {{this_user.profile.poeng}}</p>
 </div>
     
@@ -47,18 +59,24 @@ medlem
     {# Jquery CDN : Needed when using jquery_on_ready=True #}
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     {% include_chart_jscss %}
+    
+    <div class='chart' id='barchart'>
     {% load_chart charttype chartdata chartcontainer extra %}
-
-
-    {% include_container chartcontainer 200 400 %}
-<!--<a href="{% url 'my_consumption' %}" ><button>Se mitt forbruk</button></a> -->
+    {% include_container chartcontainer 250 400 %}
+    </div>
+    
+    <div class='chart' id='piechart'>
+    {% load_chart charttype2 chartdata2 chartcontainer2 extra2 %}
+    {% include_container chartcontainer2 250 300 %}
+    </div>
 {% else %}
 <p>Du har ikke gjort noen kjøp ennå</p>
     {% endif %}
 </div>    
 
+<!--
 <div id='favourites'>
-<!--{{ favourites| safe }} -->
+
 {% if favourites %}
 <table id='fav_table'>
     <tr>
@@ -73,6 +91,7 @@ medlem
 </table>
 {% endif %}
 </div>
+-->
 </div>
     
 <br />

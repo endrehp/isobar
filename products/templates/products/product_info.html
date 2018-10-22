@@ -5,7 +5,7 @@
 <style>
     #container {width: 60%; margin: auto;}
     #comment_table {border-collapse: collapse;}
-    #comments_container {margin: auto}
+    #comments_container {margin: auto; padding: 20px;}
     h2 {border-bottom: solid 2px}
     p {color: gray}
     input {width: 70%;}
@@ -13,7 +13,29 @@
     #product_container {position: relative; padding: 50px;}
     #image {display:inline-block; vertical-align: top;}
     #info {display:inline-block; text-align: left; justify-content: center; padding: 20px;}
+    #rating {color: gray;}
+    button { background-color: white; border-radius: 4px; }
+    button:hover {background-color: #ddd}
 </style>
+
+<script>
+function show_rating_table() {
+    console.log('prøver')
+    var x = document.getElementById("rating_table");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
+function rate(e) {
+    var rating = Number(e.innerText)
+    document.getElementById('rating_field').value = rating;
+    document.getElementById('comment_btn').click();
+}
+    
+</script>
 
 <div id='container'>
 
@@ -25,6 +47,36 @@
 <div id='info'>
 <h2>{{ product.title }}</h2>
 <p>{{ product.body }}</p>
+<p>Kjøpt: {{n_sales}} ganger ({{n_sales_me}} ganger av meg)</p>
+<div id='rating'>
+Rating: 
+{% if product.avg_rating > 0.9  %}
+<strong>{{product.avg_rating|floatformat:1 }}</strong> <span class="oi oi-star"></span>
+({{product.n_ratings}} ratings)
+{% else %}
+No ratings yet
+{% endif %}
+
+
+{% if rated %}
+
+{% else %}
+<button id='rate_btn' onclick=show_rating_table()>Rate</button>
+</div>
+<div id=rating_table style='display: none;'>
+
+<table>
+    <tr>
+        <td onclick=rate(this)><button>1</button></td>
+        <td onclick=rate(this)><button>2</button></td>
+        <td onclick=rate(this)><button>3</button></td>
+        <td onclick=rate(this)><button>4</button></td>
+        <td onclick=rate(this)><button>5</button></td>
+    </tr>
+</table>
+</div>
+{% endif %}
+
 </div>
 </div>
 
@@ -39,6 +91,7 @@
 {% endfor %}
 <form method='POST' action="{% url 'product_info' pk %}">
 {% csrf_token %}
+<input type='number' name='rating' id='rating_field' hidden>
 <strong>{{user.username}}: </strong><input type='text' name='comment' id='comment_field' />
 <input class='btn btn-primary' type='submit' value='Kommentér' id='comment_btn' />
 </form>

@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% block content %}
 <link type="text/css" rel="stylesheet" href="{% static 'event/style_event1.css' %}">
-<script src="{% static 'event/script_event3.js' %}"></script>
+<script src="{% static 'event/script_event4.js' %}"></script>
 
 <br />
 <h3>{{ event.title }}</h3>
@@ -19,6 +19,7 @@
     <tr onclick=add_order(this)> 
         <td class=title><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td class=price>{{ i.price }} kr</td>
+        <td class=id hidden>{{ i.id }}</td>
         <td class=add><button><span class="oi oi-plus"></span></button></td>
     </tr>
     {% endfor %}
@@ -33,6 +34,7 @@
     <tr onclick=add_order(this)> 
         <td class=title><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td class=price>{{ i.price }} kr</td>
+        <td class=id hidden>{{ i.id }}</td>
         <td class=add><button><span class="oi oi-plus"></span></button></td>
     </tr>
     {% endfor %}
@@ -48,6 +50,7 @@
     <tr onclick=add_order(this)> 
         <td class=title><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td class=price>{{ i.price }} kr</td>
+        <td class=id hidden>{{ i.id }}</td>
         <td class=add><button><span class="oi oi-plus"></span></button></td>
     </tr>
     {% endfor %}
@@ -61,6 +64,7 @@
     <tr onclick=add_order(this)> 
         <td class=title><a href="{% url 'product_info' i.id %}">{{ i.title }}</a></td>
         <td class=price>{{ i.price }} kr</td>
+        <td class=id hidden>{{ i.id }}</td>
         <td class=add><button><span class="oi oi-plus"></span></button></td>
     </tr>
     {% endfor %}

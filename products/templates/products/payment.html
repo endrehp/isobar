@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    #container {margin: auto; text-align: left; width: 40%;}
+    button {color: grey;}
+
+    button:hover {
+    background-color: gray;
+    color: white; }
+</style>
+
+<div id='container'>
 <h3>Kjøp godkjent</h3>
 <p>Kunde: {{user.username}}</p>
 <!-- <p>Total price: </p> -->
@@ -12,4 +22,5 @@
 {% else %}
 <a href="{% url 'home' %}"><button>Ok</button></a>
 {% endif %}
+</div>
 {% endblock %}
