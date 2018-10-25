@@ -44,7 +44,6 @@ def product_info(request, product_id):
     n_sales_me = len(sales.filter(user=current_user.username))
     
     rated = len(product.rating_set.filter(author=current_user.username))
-    print(rated)
     
     if request.method =='POST':
         
@@ -92,10 +91,7 @@ def quit_event(request):
     try:
         active_events = Event.objects.filter(active=True)
         for event in active_events:
-            print('hentet event:')
-            print(event.title)
             event.active = False
-            print('avsluttet')
             event.save()
         return redirect('home')
     except:
@@ -137,7 +133,6 @@ def event(request):
                 user = User.objects.get(username=request.POST['username'])
                 products = request.POST.getlist('title')
                 product_ids = request.POST.getlist('id')
-                print(product_ids)
                 prices = request.POST.getlist('price')
                 total = sum(list(map(int, prices)))
                 
@@ -154,13 +149,12 @@ def event(request):
                 
                 return render(request, 'products/payment.html', {'user': user, 'event':event, 'points_gained': points_gained})
             except:
-                print('exception')
                 categories = Category.objects
                 beer = categories.get(category='Beer').product_set.all()
                 drinks = categories.get(category='Drink').product_set.all()
                 shots = categories.get(category='Shot').product_set.all()
                 other = categories.get(category='Other').product_set.all()
-                #print(beer[1].title)
+                
                 return render(request, 'products/event.html', {'event':event, 'beer':beer, 'drinks': drinks, 'shots': shots, 'other': other, 'error': 'noe gikk galt', 'customers': customers})
 
     else:

@@ -206,7 +206,6 @@ def member_profile(request, member_id):
     purchases = Purchase.objects.filter(user=this_user.username).order_by('-time')
     if this_user == request.user:
         my_profile = True
-        print('my profile')
     else:
         my_profile = False
     
