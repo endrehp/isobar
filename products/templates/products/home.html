@@ -14,8 +14,9 @@
 
 <div id=container>
 <br />
-<h3>Velkommen til Isobar</h3>
+<h3>Velkommen til:</h3>
 
+<img src="{% static 'images/isobar2.jpg'%}" class='img-fluid' width=800 height=600 />
 {% if user.is_staff %}
 <br />
 {% if event.active %}
@@ -34,7 +35,7 @@
 {% if user.is_authenticated %}
 <p>Hei {{user.username}}! Betaling skjer via vipps. Har du spørsmål, send henvendelse til endre.hauge.paulsen@lyse.net</p>
 {% else %}
-<p>For å være med på morroa må du lage deg en bruker. Dette gjør du ved å klikke på "Sign up" øverst i høyre hjørne.</p>
+<p>Du må være medlem for å bruke denne siden. Gå til "Login" eller "Sign up" øverst i høyre hjørne.</p>
 {% endif %}
 </div>
 

@@ -111,19 +111,21 @@ def event(request):
         event = Event()
         
     try:
-        purchases = Purchase.objects.all().order_by('-time')
-        df = pd.DataFrame(list(purchases.values()))
-        all_customers = list(df['user'])
+        #purchases = Purchase.objects.all().order_by('-time')
+        #df = pd.DataFrame(list(purchases.values()))
+        #all_customers = list(df['user'])
         #unique_customers = list(set(list(df['user'])))
         #print(customers)
+        
+        all_customers = User.objects.all().order_by('username')
         
         customers=[]
         for i in range(len(all_customers)):
             if all_customers[i] not in customers:
-                customers.append(all_customers[i])
+                customers.append(all_customers[i].username)
                 
-            if len(customers)>10:
-                break
+            #if len(customers)>10:
+            #    break
         
     except:
         customers = None

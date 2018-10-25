@@ -81,8 +81,8 @@
         <div id='order'>
 <table style='width:100%' id='order_table'>
     <tr>
-    <th>Order</th>
-    <th>Price</th>
+    <th>Bestilling</th>
+    <th>Pris</th>
     </tr>
     <tr>
     <td style='color:black'><strong>Total:</strong></td>
@@ -91,7 +91,7 @@
 </table>
 </div>
 <br />
-Username:
+Brukernavn:
 <br />
 <input type='text' name='username' id='username_field' />
 
@@ -105,7 +105,7 @@ Username:
 {% if customers %}
     <table style='width:100%'>
     <tr>
-    <th>Nylige</th>
+    <th>Kunder</th>
     </tr>
     {% for customer in customers %}
     <tr onclick=fill_and_pay(this)>

@@ -28,7 +28,7 @@ class Profile(models.Model):
         for purchase in purchases:
             now = timezone.now()
             diff = now - purchase.time
-            if diff.seconds < 21600:
+            if diff.seconds + diff.days*24*3600 < 21600:
                 #product = Product.objects.get(id=purchase.product_id)
                 #gram_alc += product.gram_alc
                 gram_alc += 20

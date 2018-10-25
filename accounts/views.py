@@ -163,7 +163,7 @@ def my_profile(request):
         return render(request, 'accounts/profile.html', data)
     
     except:
-        data={'this_user': this_user}
+        data={'this_user': this_user, 'my_profile': True}
         return render(request, 'accounts/profile.html', data)
 
 @login_required
@@ -318,7 +318,7 @@ def member_profile(request, member_id):
         return render(request, 'accounts/profile.html', data)
     
     except:
-        data={'this_user': this_user}
+        data={'this_user': this_user, 'my_profile': my_profile}
         return render(request, 'accounts/profile.html', data)
 
     
