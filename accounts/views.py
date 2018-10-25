@@ -381,13 +381,13 @@ def balances(request):
     if request.method == 'POST':
         users = request.POST.getlist('username')
         amounts = request.POST.getlist('amount')
-        print(users)
+        #print(users)
         
         for i in range(len(amounts)):
             try:
                 user = User.objects.get(username=users[i])
                 user.profile.add_money(int(amounts[i]))
-                print('penger overført')
+                #print('penger overført')
                 user.save()
             except:
                 pass
