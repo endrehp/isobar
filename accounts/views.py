@@ -22,6 +22,11 @@ def signup(request):
                     return render(request, 'accounts/signup.html', {'error': 'Username has already been taken'})
                 except User.DoesNotExist:
                     user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
+                    print(user)
+                    user.profile.phone = request.POST['phone']
+                    
+                    print(user.profile)
+                    user.save()
                     auth.login(request, user)
                     return redirect('home')
             else:
@@ -184,6 +189,13 @@ def edit_profile(request):
                 current_user.profile.image = request.FILES['image']
             except:
                 pass
+            
+            if request.POST['phone']:
+                current_user.profile.phone = request.POST['phone']
+            
+            else:
+                current_user.profile.phone = 'none'
+            
             
             current_user.save()
             return redirect('my_profile')

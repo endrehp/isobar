@@ -76,13 +76,30 @@ def start_event(request):
         event = Event(title=request.POST['title'], active=True)
         event.save()
         
+        
         categories = Category.objects
         beer = categories.get(category='Beer').product_set.all()
         drinks = categories.get(category='Drink').product_set.all()
         shots = categories.get(category='Shot').product_set.all()
         other = categories.get(category='Other').product_set.all()
         
-        return render(request, 'products/event.html', {'event': event, 'beer':beer, 'drinks': drinks, 'shots': shots, 'other': other})
+        try:
+        
+            all_customers = User.objects.all().order_by('username')
+
+            customers=[]
+            for i in range(len(all_customers)):
+                if all_customers[i] not in customers:
+                    customers.append(all_customers[i].username)
+
+                #if len(customers)>10:
+                #    break
+
+        except:
+            customers = None
+        
+        return render(request, 'products/event.html', {'event': event, 'beer':beer, 'drinks': drinks, 'shots': shots, 'other': other, 'customers':customers})
+        
         
     else:
         return render(request, 'products/start_event.html')
@@ -107,11 +124,6 @@ def event(request):
         event = Event()
         
     try:
-        #purchases = Purchase.objects.all().order_by('-time')
-        #df = pd.DataFrame(list(purchases.values()))
-        #all_customers = list(df['user'])
-        #unique_customers = list(set(list(df['user'])))
-        #print(customers)
         
         all_customers = User.objects.all().order_by('username')
         

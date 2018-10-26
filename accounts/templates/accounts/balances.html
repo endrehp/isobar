@@ -22,6 +22,7 @@
     <th>Navn</th>
     <th>Saldo</th>
     <th>Overføring</th>
+    <th>Telefon</th>
     {% for member in members %}
     <tr> 
         <td><input type='text' name='username' value="{{member.username}}" hidden>{{ member.username }}</td>
@@ -30,6 +31,7 @@
         {% if confirmations %}
         <td><span class="oi oi-circle-check"></span></td>
         {% endif %}
+        <td>{{member.profile.phone}}</td>
         <!--
         <td style="float: right;"><div id='profile_picture'>
 <a href="{% url 'member_profile' member.id %}">

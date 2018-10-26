@@ -11,6 +11,7 @@ class Profile(models.Model):
     saldo = models.IntegerField(default=0)
     poeng = models.IntegerField(default=0)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
+    phone = models.CharField(max_length=100, default='none')
     
     def add_money(self, amount):
         self.saldo += amount
